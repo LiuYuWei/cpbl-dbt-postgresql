@@ -1,0 +1,19 @@
+version: 2
+
+models:
+
+  - name: cmpeng
+    description: "彭政閔的歷史數據"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - not_null
+
+  - name: cfchen
+    description: "彭政閔的歷史數據"
+    columns:
+      - name: id
+        description: "The primary key for this table"
+        tests:
+          - not_null
