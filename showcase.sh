@@ -27,6 +27,7 @@ function install_docker_compose(){
     if [[ "$(command -v docker-compose)" == "" ]]; then
         sudo apt-get update
         sudo apt install docker-compose
+        sudo chmod +x $(command -v docker-compose)
     else
         info "[Check] Passed checking: docker-compose."
     fi
