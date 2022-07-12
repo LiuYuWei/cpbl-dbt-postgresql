@@ -1,13 +1,13 @@
 info() {
-  echo "\033[0;32m$1\033[0m"
+  echo -i "\033[0;32m$1\033[0m"
 }
 
 warn() {
-  echo "\033[0;93m$1\033[0m"
+  echo -i "\033[0;93m$1\033[0m"
 }
 
 error() {
-  echo "\033[0;91m$1\033[0m" >&2
+  echo -i "\033[0;91m$1\033[0m" >&2
 }
 
 function install_docker(){
@@ -15,6 +15,9 @@ function install_docker(){
         mkdir ./script/docker/
         curl -fsSL https://get.docker.com -o ./script/docker/get-docker.sh
         sudo sh ./script/docker/get-docker.sh
+        sudo groupadd docker
+        sudo usermod -aG docker $USER
+        sudo chmod 666 /var/run/docker.sock
     else
         info "[Check] Passed checking: docker."
     fi
@@ -23,7 +26,7 @@ function install_docker(){
 function install_docker_compose(){
     if [[ "$(command -v docker-compose)" == "" ]]; then
         sudo apt-get update
-        sudo apt-get install docker-compose-plugin
+        sudo apt install docker-compose
     else
         info "[Check] Passed checking: docker-compose."
     fi
@@ -40,9 +43,16 @@ function get_cpbl_opendata(){
 function import_csv_postgresql(){
     if [[ "$(command -v python3)" == "" ]]; then
         sudo apt-get update
-        sudo apt-get install python3 python3-pip
+        sudo apt-get install python3 -y
     else
-        info "[Check] Passed checking: docker-compose."
+        info "[Check] Passed checking: python3."
+    fi
+
+    if [[ "$(command -v pip)" == "" ]]; then
+        sudo apt-get update
+        sudo apt-get install python3-pip -y
+    else
+        info "[Check] Passed checking: python pip."
     fi
     
     pip3 install sqlalchemy pandas psycopg2-binary
@@ -51,7 +61,11 @@ function import_csv_postgresql(){
 
 function install_dbt(){
     if [[ "$(command -v dbt)" == "" ]]; then
-        pip3 install dbt
+        sudo apt-get install git libpq-dev python-dev python3-pip
+        sudo apt-get remove python-cffi
+        sudo pip install --upgrade cffi
+        pip install cryptography~=3.4
+        pip3 install dbt-core dbt-postgres
     else
         info "[Check] Passed checking: dbt."
     fi
