@@ -1,13 +1,13 @@
 info() {
-  echo -i "\033[0;32m$1\033[0m"
+  echo -e "\033[0;32m$1\033[0m"
 }
 
 warn() {
-  echo -i "\033[0;93m$1\033[0m"
+  echo -e "\033[0;93m$1\033[0m"
 }
 
 error() {
-  echo -i "\033[0;91m$1\033[0m" >&2
+  echo -e "\033[0;91m$1\033[0m" >&2
 }
 
 function install_docker(){
@@ -26,7 +26,7 @@ function install_docker(){
 function install_docker_compose(){
     if [[ "$(command -v docker-compose)" == "" ]]; then
         sudo apt-get update
-        sudo apt install docker-compose
+        sudo apt install docker-compose -y
         sudo chmod +x $(command -v docker-compose)
     else
         info "[Check] Passed checking: docker-compose."
@@ -62,11 +62,11 @@ function import_csv_postgresql(){
 
 function install_dbt(){
     if [[ "$(command -v dbt)" == "" ]]; then
-        sudo apt-get install git libpq-dev python-dev python3-pip
-        sudo apt-get remove python-cffi
-        sudo pip install --upgrade cffi
-        pip install cryptography~=3.4
-        pip3 install dbt-core dbt-postgres
+        python3 -m pip install --user --upgrade pip
+        python3 -m pip install --user virtualenv
+        python3 -m venv env
+        source env/bin/activate
+        pip3 install dbt-postgres
     else
         info "[Check] Passed checking: dbt."
     fi
@@ -78,17 +78,17 @@ function setting_dbt_profile(){
     else
         dbt init
         read -p 'dbt project name: ' DBT_PROJECT_NAME
-        sed -i '' 's/\[1 or more\]/1/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[host\]/\localhost/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[port\]/5432/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[dev_username\]/cpbldatauser/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[prod_username\]/cpbldatauser/g' ~/.dbt/profiles.yml
-        sed -i '' 's/pass\:/password\:/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[dev_password\]/cpbldatapassword/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[prod_password\]/cpbldatapassword/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[dbname\]/cpbl_data/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[dev_schema\]/public/g' ~/.dbt/profiles.yml
-        sed -i '' 's/\[prod_schema\]/public/g' ~/.dbt/profiles.yml
+        sed -i 's/\[1 or more\]/1/g' ~/.dbt/profiles.yml
+        sed -i 's/\[host\]/\localhost/g' ~/.dbt/profiles.yml
+        sed -i 's/\[port\]/5432/g' ~/.dbt/profiles.yml
+        sed -i 's/\[dev_username\]/cpbldatauser/g' ~/.dbt/profiles.yml
+        sed -i 's/\[prod_username\]/cpbldatauser/g' ~/.dbt/profiles.yml
+        sed -i 's/pass\:/password\:/g' ~/.dbt/profiles.yml
+        sed -i 's/\[dev_password\]/cpbldatapassword/g' ~/.dbt/profiles.yml
+        sed -i 's/\[prod_password\]/cpbldatapassword/g' ~/.dbt/profiles.yml
+        sed -i 's/\[dbname\]/cpbl_data/g' ~/.dbt/profiles.yml
+        sed -i 's/\[dev_schema\]/public/g' ~/.dbt/profiles.yml
+        sed -i 's/\[prod_schema\]/public/g' ~/.dbt/profiles.yml
     fi
 
     
