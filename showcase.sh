@@ -62,14 +62,15 @@ function import_csv_postgresql(){
 
 function install_dbt(){
     if [[ "$(command -v dbt)" == "" ]]; then
+        sudo apt install python3.10-venv -y
         python3 -m pip install --user --upgrade pip
         python3 -m pip install --user virtualenv
-        python3 -m venv env
-        source env/bin/activate
-        pip3 install dbt-postgres
     else
         info "[Check] Passed checking: dbt."
     fi
+    python3 -m venv env
+    source env/bin/activate
+    pip3 install dbt-postgres
 }
 
 function setting_dbt_profile(){
@@ -79,7 +80,7 @@ function setting_dbt_profile(){
         dbt init
         read -p 'dbt project name: ' DBT_PROJECT_NAME
         sed -i 's/\[1 or more\]/1/g' ~/.dbt/profiles.yml
-        sed -i 's/\[host\]/\localhost/g' ~/.dbt/profiles.yml
+        sed -i 's/\[host\]/localhost/g' ~/.dbt/profiles.yml
         sed -i 's/\[port\]/5432/g' ~/.dbt/profiles.yml
         sed -i 's/\[dev_username\]/cpbldatauser/g' ~/.dbt/profiles.yml
         sed -i 's/\[prod_username\]/cpbldatauser/g' ~/.dbt/profiles.yml
