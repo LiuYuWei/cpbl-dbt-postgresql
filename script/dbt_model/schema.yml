@@ -11,7 +11,7 @@ models:
           - not_null
 
   - name: cfchen
-    description: "彭政閔的歷史數據"
+    description: "陳金鋒的歷史數據"
     columns:
       - name: id
         description: "The primary key for this table"
